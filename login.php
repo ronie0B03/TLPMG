@@ -18,7 +18,7 @@ if (isset($_SESSION['username'])) {
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Celine and Peter Store - Login</title>
+    <title>Toda La'el Pagibig Mini Grocery - Login</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -69,7 +69,7 @@ if (isset($_SESSION['username'])) {
                         <div class="col-lg-12">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Celine and Peter Store - Login</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">Toda La'el Pagibig Mini Grocery - Login</h1>
                                 </div>
                                 <form class="user" method="post" action="process_login.php">
                                     <div class="form-group">
