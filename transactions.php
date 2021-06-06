@@ -22,8 +22,20 @@ else{
     $itemCtrl = $_GET['itemCtrl'];
 }
 
+
+if(!isset($_GET['itemBarCodeCtrl']))
+{
+    $itemBarCodeCtrl = 0;
+}
+else{
+    $itemBarCodeCtrl = $_GET['itemBarCodeCtrl'];
+}
+
 ?>
 <title>Transactions - Celine & Peter Store</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/bootstrap-select.min.css" rel="stylesheet" />
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 
@@ -50,6 +62,15 @@ else{
                     ?>
                 </div>
             <?php } ?>
+            <?php if (isset($_SESSION['errors'])): ?>
+                <div class="alert alert-danger alert-dismissible">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <?php
+                    echo $_SESSION['errors'];
+                    unset($_SESSION['errors']);
+                    ?>
+                </div>
+            <?php endif ?>
             <!-- End Alert here -->
 
             <!-- Add Transaction -->
@@ -60,96 +81,132 @@ else{
                 <div class="card-body">
                     <div class="table-responsive">
                         <form method="post" action="process_transaction.php">
-
-                            <table class="table">
+                            <table id="table_items_barcode" class="table">
                                 <thead>
                                     <tr>
-                                        <th>Item</th>
-                                        <th>Quantity</th>
-                                        <th>Adjusted Price / Item</th>
-                                        <th>Subtotal</th>
+                                        <th width="10%"></th>
+                                        <th width="35%">Barcode</th>
+                                        <th width="25%">Quantity</th>
+                                        <th width="15%">Price</th>
+                                        <th width="15%">Subtotal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                $total = 0;
-                                $itemCounter = 1;
-                                while($itemCtrl>=$itemCounter){
-                                    if(isset($_GET['itemCtrl'])){
-                                        $item = $_GET['item'.$itemCounter];
-                                        $qty = $_GET['qty'.$itemCounter];
-                                        $price = $_GET['price'.$itemCounter];
-                                        $subTotal = (float)$qty*(float)$price;
-                                    }
-                                    else{
-                                        $item = NULL;
-                                        $qty = NULL;
-                                        $price = NULL;
-                                        $subTotal = NULL;
-                                    }
-
-                                    ?>
+                                   
+                                </tbody>
+                                <tfoot>
                                     <tr>
                                         <td>
-                                            <select dir="rtl" class="form-control selectpicker" name="item<?php echo $itemCounter; ?>" data-live-search="true">
+                                            <input type="hidden" class='_input_id' value="">
+                                            <div class='d-flex justify-content-center align-items-center border-none'>
+                                                <button type="button" class="btn btn-success btn-sm _btn_add_item" disabled>Add Item</button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <input  list="item_barcodes" class="form-control _input_barcode"  value="" placeholder="Barcode">
+                                            <datalist id="item_barcodes">
                                                 <?php
-                                                    $getItemForAdding = mysqli_query($mysqli, "SELECT * FROM inventory");
-                                                    while($newItemsForAdding=$getItemForAdding->fetch_assoc()){
+                                                    $items = mysqli_query($mysqli, "SELECT barcode FROM inventory");
                                                 ?>
-                                                        <option data-tokens="<?php echo strtoupper($newItemsForAdding['item_name']); ?>" class="" value="<?php echo $newItemsForAdding['id']; ?>" <?php if($item==$newItemsForAdding['id']){echo 'selected';} ?>>
-                                                            <?php echo strtoupper($newItemsForAdding['item_code'].' - '.$newItemsForAdding['item_name'].' - PHP'.$newItemsForAdding['item_price']); ?>
-                                                        </option>
-                                                <?php } ?>
-                                            </select>
+                                                <?php while($item=$items->fetch_assoc()): ?> 
+                                                    <option value="<?=$item['barcode']?>">
+                                                        <?=$item['barcode']?>
+                                                    </option>
+                                                <?php endwhile ?>
+                                            </datalist>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" name="qty<?php echo $itemCounter; ?>" value="<?php echo $qty; ?>" placeholder="1" >
+                                            <input type="number" class="form-control _input_quantity" value="0" placeholder="0" disabled>
                                         </td>
                                         <td>
-                                            <input type="number" class="form-control" name="price<?php echo $itemCounter; ?>" value="<?php echo $price ?>" step="0.0001" placeholder="0.00" >
+                                            <input type="number" class="form-control _input_price"    value="0" step="0.0001" placeholder="0.00" readonly >
                                         </td>
-                                        <td><input class="form-control" name="subTotal" value="<?php echo $subTotal; ?>" readonly></td>
+                                        <td><input class="form-control _input_subtotal"  value="0" readonly></td>
                                     </tr>
-                                <?php
-                                    $itemCounter++;
-                                    $total += $subTotal;
-                                } ?>
-                                </tbody>
+                                </tfoot>
                             </table>
-                            <input type="text" name="itemCtrl" value="<?php echo $itemCtrl; ?>" style="visibility: hidden;">
-                            <span class="float-right"><b>TOTAL: ₱<?php echo number_format($total,2); ?></b></span>
-                            <br>
-                            <button type="submit" class="btn btn-success btn-sm float-right" name="add_item">Add Item</button>
-                            <br>
-                            <br>
-                            <br>
-                            <table class="table" width="100%" cellspacing="0">
-                                <thead>
-                                <tr>
-                                    <th width="10%;">Control ID</th>
-                                    <th width="">Full Name</th>
-                                    <th width="">Address</th>
-                                    <th width="">Phone Number</th>
-                                    <th width="">Amount Paid</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                            <span class="float-right"><b>TOTAL: ₱ <span id="total_amount_barcode">0.00</span></b></span>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <table id="table_items" class="table">
+                                    <thead>
+                                        <tr>
+                                            <th width="10%"></th>
+                                            <th width="35%">Item</th>
+                                            <th width="25%">Quantity</th>
+                                            <th width="15%">Price</th>
+                                            <th width="15%">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" class='_input_id' value="">
+                                                <div class='d-flex justify-content-center align-items-center border-none'>
+                                                    <button type="button" class="btn btn-success btn-sm _btn_add_item" disabled>Add Item</button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <select class="form-control  select-picker _select_item" data-live-search="true">
+                                                    <option selected disabled>
+                                                        Select Item
+                                                    </option>
+                                                    <?php
+                                                        $getItemForAdding = mysqli_query($mysqli, "SELECT * FROM inventory");
+                                                    ?>
+                                                    <?php while($newItemsForAdding=$getItemForAdding->fetch_assoc()): ?> 
+                                                            <option data-tokens="<?php echo strtoupper($newItemsForAdding['item_name']); ?>" class="" value="<?php echo $newItemsForAdding['id']; ?>">
+                                                                <?php echo strtoupper($newItemsForAdding['item_code'].' - '.$newItemsForAdding['item_name']); ?>
+                                                            </option>
+                                                    <?php endwhile ?>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control _input_quantity"  value="0" placeholder="0" disabled>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control _input_price"  value="0" step="0.0001" placeholder="0.00" readonly>
+                                            </td>
+                                            <td><input class="form-control _input_subtotal" name="subTotal" value="0" readonly></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <span class="float-right"><b>TOTAL: ₱ <span id="total_amount">0.00</span></b></span>
+                                <br>
+                                <br>
+                                <br>
+                                <br>
+                                <table class="table" width="100%" cellspacing="0">
+                                    <thead>
                                     <tr>
-                                        <td><input type="text" class="form-control" name="transactionID" value="<?php echo ++$lastTransactionID; ?>" readonly></td>
-                                        <td><input type="text" class="form-control" name="full_name" placeholder="ex: Juan Crus" value="Juan Cruz"></td>
-                                        <td>
-                                            <textarea class="form-control" name="address" style="min-height: 100px;">Angeles City</textarea>
-                                        </td>
-                                        <td><input type="text" class="form-control" name="phone_num" placeholder="ex: 04876494843" value="09090912098"></td>
-                                        <td><input type="number" step="0.01" class="form-control" name="amount_paid" placeholder="<?php echo $total; ?>" value="<?php echo $total; ?>" required></td>
+                                        <th width="10%;">Control ID</th>
+                                        <th width="">Full Name</th>
+                                        <th width="">Address</th>
+                                        <th width="">Phone Number</th>
+                                        <th width="">Amount Paid</th>
                                     </tr>
-                                </tbody>
-                            </table>
-                            <br/>
-                            <center>
-                                <button class="btn btn-sm btn-primary m-1" name="save" type="submit"><i class="far fa-save" ></i> Save</button>
-                                <a href="transactions.php" class="btn btn-danger btn-sm m-1"><i class="fas as fa-sync"></i> Cancel</a>
-                            </center>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><input type="text" class="form-control" name="transactionID" value="<?php echo ++$lastTransactionID; ?>" readonly></td>
+                                            <td><input type="text" class="form-control" name="full_name" placeholder="ex: Juan Crus" value="Juan Cruz"></td>
+                                            <td>
+                                                <textarea class="form-control" name="address" style="min-height: 100px;">Angeles City</textarea>
+                                            </td>
+                                            <td><input type="text" class="form-control" name="phone_num" placeholder="ex: 04876494843" value="09090912098"></td>
+                                            <td><input type="number" step="0.01" class="form-control" name="amount_paid"  required></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <br/>
+                                <center>
+                                    <button class="btn btn-sm btn-primary m-1" name="save" type="submit"><i class="far fa-save" ></i> Save</button>
+                                    <a href="transactions.php" class="btn btn-danger btn-sm m-1"><i class="fas as fa-sync"></i> Cancel</a>
+                                </center>
                         </form>
                     </div>
                 </div>
@@ -281,6 +338,9 @@ else{
     </div>
 </div>
 
+<!-- Page Behaviour -->
+<script src="./transaction_page.js"></script>
+
 <!-- Bootstrap core JavaScript-->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -291,6 +351,11 @@ else{
 <!-- Custom scripts for all pages-->
 <script src="js/sb-admin-2.min.js"></script>
 
+<!-- Selector with search -->
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-select.min.js"></script>
+
 <!-- Page level plugins -->
 <script src="vendor/datatables/jquery.dataTables.min.js"></script>
 <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
@@ -298,12 +363,7 @@ else{
 <!-- Page level custom scripts -->
 <script src="js/demo/datatables-demo.js"></script>
 
-<!-- Selector with search -->
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-select.min.js"></script>
-<link href="css/bootstrap.min.css" rel="stylesheet" />
-<link href="css/bootstrap-select.min.css" rel="stylesheet" />
+
 
     <style type="text/css">
         .dropdown-menu{

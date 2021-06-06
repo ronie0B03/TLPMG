@@ -57,6 +57,7 @@ $getItems = mysqli_query($mysqli, "SELECT * FROM inventory");
                                 <thead>
                                 <tr>
                                     <th width="5%">Item ID</th>
+                                    <th width="">Bar Code</th>
                                     <th width="">Item Code</th>
                                     <th width="">Item Name</th>
                                     <th width="">Quantity</th>
@@ -69,6 +70,7 @@ $getItems = mysqli_query($mysqli, "SELECT * FROM inventory");
                                 <tbody>
                                 <tr>
                                     <td><input type="text" name="item_id" class="form-control" value="<?php echo ++$lastItemID; ?>" required readonly></td>
+                                    <td><input type="text" name="barcode" class="form-control" required></td>
                                     <td><input type="text" name="item_code" class="form-control" required></td>
                                     <td><input type="text" name="item_name" class="form-control" required></td>
                                     <td><input type="number" name="qty" class="form-control" required></td>
@@ -98,6 +100,7 @@ $getItems = mysqli_query($mysqli, "SELECT * FROM inventory");
                         <table class="table table-bordered" id="inventoryTable" width="100%" cellspacing="0">
                             <thead>
                             <tr>
+                                <th>Bar Code</th>
                                 <th>Item Code</th>
                                 <th>Item Name</th>
                                 <th>Description</th>
@@ -113,6 +116,7 @@ $getItems = mysqli_query($mysqli, "SELECT * FROM inventory");
                             <?php while($newItems = $getItems->fetch_assoc()){
                                 $qty = $newItems['qty'];?>
                             <tr>
+                                <td><?php echo $newItems['barcode']; ?></td>
                                 <td><?php echo $newItems['item_code']; ?></td>
                                 <td><?php echo $newItems['item_name']; ?></td>
                                 <td><?php echo $newItems['item_description']; ?></td>
