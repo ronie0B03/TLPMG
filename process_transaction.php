@@ -91,14 +91,74 @@ if(isset($_POST['add_item_barcode']))
 }
 
 if(isset($_POST['save'])){
-    $itemCtrl = $_POST['itemCtrl'];
+
+    
+    if(isset($_POST['item_id']))
+    {
+        $countItems             = count($_POST['item_id']); 
+        $customer_name          = mysqli_escape_string($mysqli, $_POST['full_name']);
+        $customer_address       = mysqli_escape_string($mysqli, $_POST['address']);
+        $customer_phone         = mysqli_escape_string($mysqli, $_POST['phone_num']);
+        $customer_cash          = mysqli_escape_string($mysqli, $_POST['amount_paid']);
+        $totalTransactionAmount = 0;
+        $transactionID          = $_POST['transactionID'];
+    
+    
+        for($i=0; $i<$countItems; $i++)
+        {
+           
+            $item_id       = mysqli_escape_string($mysqli, $_POST['item_id'][$i]);
+            $item_quantity = mysqli_escape_string($mysqli, $_POST['item_quantity'][$i]);
+            $item_price    = mysqli_escape_string($mysqli, $_POST['item_price'][$i]);
+            
+            $subTotal =  $item_price *  $item_quantity;
+    
+            
+            if($item_quantity > 0)
+            {
+                $mysqli->query("INSERT INTO transaction_lists 
+                                    (transaction_id, item_id, qty, adjusted_price, transaction_date, subtotal) 
+                                    VALUES('$transactionID', '$item_id', '$item_quantity', '$item_price','$date','$subTotal' )"
+                                    ) or die(mysqli_error($mysqli)
+                                );
+        
+                $getQtyInventory = mysqli_query($mysqli, "SELECT * FROM inventory WHERE id = '$item_id' ");
+                $newQtyInventory = $getQtyInventory->fetch_array();
+                $inventoryQty    = $newQtyInventory['qty'] - $item_quantity;
+                $mysqli->query("UPDATE inventory SET qty='$inventoryQty' WHERE id='$item' ") or die(mysqli_error($mysqli));
+            } 
+    
+            $totalTransactionAmount += $subTotal; 
+        }
+    
+        
+        $mysqli->query("INSERT INTO transaction 
+                            (id, full_name, transaction_date, address, phone_num, total_amount, amount_paid) 
+                            VALUES('$transactionID', '$customer_name', '$date', '$customer_address', '$customer_phone', '$totalTransactionAmount', '$customer_cash')") 
+                            or die(mysqli_error($mysqli));
+    
+    
+        //echo "$total $customer_cash"; 
+    
+        $_SESSION['message']    = "Transaction has been saved!";
+        $_SESSION['msg_type']   = "success";
+    }
+    else 
+    {
+        $_SESSION['message']    = "No Items present for Transaction!";
+        $_SESSION['msg_type']   = "danger";
+    }
+
+   header('location: transactions.php'); 
+    
+  /*   $itemCtrl = $_POST['itemCtrl'];
     $itemController = 1;
     $transactionID = $_POST['transactionID'];
 
-    $full_name = $_POST['full_name'];
-    $address = $_POST['address'];
-    $phone_num= $_POST['phone_num'];
-    $amount_paid = $_POST['amount_paid'];
+    full_name = $_POST['full_name'];
+    address = $_POST['address'];
+    phone_num= $_POST['phone_num'];
+    amount_paid = $_POST['amount_paid'];
 
     $total=0;
     while($itemCtrl!=0){
@@ -127,7 +187,7 @@ if(isset($_POST['save'])){
     $_SESSION['message'] = "Transaction has been saved!";
     $_SESSION['msg_type'] = "success";
 
-    header('location: transactions.php');
+    header('location: transactions.php');  */
 }
 
 if(isset($_POST['update_payment'])){
@@ -136,7 +196,7 @@ if(isset($_POST['update_payment'])){
     $pay_amount = $_POST['pay_amount'];
 
     $total_amount_paid = $total_amount_paid + $pay_amount;
-    $mysqli->query("UPDATE transaction SET amount_paid='$total_amount_paid' WHERE id='$transaction_id' ") or die ($mysqli->error());
+    $mysqli->query("UPDATE transaction SET amount_paid='$total_amount_paid' WHERE id='$transaction_id' ") or die(mysqli_error($mysqli));
 
     $_SESSION['message'] = "Transaction has been updated!";
     $_SESSION['msg_type'] = "success";
@@ -146,8 +206,8 @@ if(isset($_POST['update_payment'])){
 
 if(isset($_GET['delete'])){
     $id = $_GET['delete'];
-    $mysqli->query(" DELETE FROM transaction WHERE id = '$id' ") or die($mysqli->error());
-    $mysqli->query(" DELETE FROM transaction_lists WHERE transaction_id = '$id' ") or die($mysqli->error());
+    $mysqli->query(" DELETE FROM transaction WHERE id = '$id' ") or die(mysqli_error($mysqli));
+    $mysqli->query(" DELETE FROM transaction_lists WHERE transaction_id = '$id' ") or die(mysqli_error($mysqli));
 
     $_SESSION['message'] = "Transaction has been deleted!";
     $_SESSION['msg_type'] = "danger";
