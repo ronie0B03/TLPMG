@@ -125,7 +125,7 @@ if(isset($_POST['save'])){
                 $getQtyInventory = mysqli_query($mysqli, "SELECT * FROM inventory WHERE id = '$item_id' ");
                 $newQtyInventory = $getQtyInventory->fetch_array();
                 $inventoryQty    = $newQtyInventory['qty'] - $item_quantity;
-                $mysqli->query("UPDATE inventory SET qty='$inventoryQty' WHERE id='$item' ") or die(mysqli_error($mysqli));
+                $mysqli->query("UPDATE inventory SET qty='$inventoryQty' WHERE id='$item_id' ") or die(mysqli_error($mysqli));
             } 
     
             $totalTransactionAmount += $subTotal; 
@@ -136,9 +136,6 @@ if(isset($_POST['save'])){
                             (id, full_name, transaction_date, address, phone_num, total_amount, amount_paid) 
                             VALUES('$transactionID', '$customer_name', '$date', '$customer_address', '$customer_phone', '$totalTransactionAmount', '$customer_cash')") 
                             or die(mysqli_error($mysqli));
-    
-    
-        //echo "$total $customer_cash"; 
     
         $_SESSION['message']    = "Transaction has been saved!";
         $_SESSION['msg_type']   = "success";
