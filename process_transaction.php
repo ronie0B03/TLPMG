@@ -26,6 +26,70 @@ if(isset($_POST['add_item'])){
     header("location: ".$getURI);
 }
 
+if(isset($_POST['add_item_barcode']))
+{    
+    $itemBarCodeCounter    = $_POST['itemBarCodeCtrl'];
+    
+    //* check if barcode exist 
+    if(!empty(trim($_POST['itemBarCode'])))
+    {
+        $barcode = trim($_POST['itemBarCode']);
+        $query   = mysqli_query($mysqli, "SELECT * FROM inventory WHERE barcode='$barcode'");
+        
+        if(mysqli_num_rows($query) > 0)
+        {
+            if(!empty(trim($_POST['qtyBarCode'])))
+            {                
+                
+                $product = $query->fetch_assoc();
+                
+                $item   = $_POST['itemBarCode'];
+                $getURI = $getURI.'&itemBarCode'.$itemBarCodeCounter.'='.$item;
+                
+                $qty    = $_POST['qtyBarCode'] ?? 1;
+                $getURI = $getURI.'&qtyBarCode'.$itemBarCodeCounter.'='.$qty;
+                
+                $price  = $product['item_price'];
+                $getURI = $getURI.'&priceBarCode'.$itemBarCodeCounter.'='.$price;
+                
+                $itemBarCodeCounter++; 
+            }
+            else 
+            {
+                $_SESSION['errors']  = "Quantity Item of Barcode: {$barcode} is 0";
+            }
+        }
+        else 
+        {
+            $_SESSION['errors']  = "Item with Barcode: {$barcode} not found";
+        }
+    }
+    
+    $getURI = $getURI.'&itemBarCodeCtrl='.$itemBarCodeCounter;
+
+    while($itemBarCodeCounter  !=  0)
+    {
+        if(isset($_POST['itemBarCode'.$itemBarCodeCounter]))
+        {
+            $item   = $_POST['itemBarCode'.$itemBarCodeCounter];
+            $getURI = $getURI.'&itemBarCode'.$itemBarCodeCounter.'='.$item;
+            
+            $qty    = $_POST['qtyBarCode'.$itemBarCodeCounter];
+            $getURI = $getURI.'&qtyBarCode'.$itemBarCodeCounter.'='.$qty;
+    
+            $price  = $_POST['priceBarCode'.$itemBarCodeCounter];
+            $getURI = $getURI.'&priceBarCode'.$itemBarCodeCounter.'='.$price;
+        }
+
+        $itemBarCodeCounter--;
+    } 
+    
+    
+    //echo $getURI; 
+    //echo '<br>' . $itemBarCodeCounter;
+    header("location: ".$getURI); 
+}
+
 if(isset($_POST['save'])){
     $itemCtrl = $_POST['itemCtrl'];
     $itemController = 1;

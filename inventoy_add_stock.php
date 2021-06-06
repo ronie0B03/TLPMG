@@ -67,10 +67,11 @@ if(!isset($_GET['item_id'])){
                             <table class="table table-bordered" width="100%" cellspacing="0">
                                 <thead>
                                 <tr>
-                                    <th width="5%">Item ID</th>
-                                    <th width="15%">Item Code</th>
-                                    <th width="20%">Item Name</th>
-                                    <th width="520">Current stock</th>
+                                    <th width="5%">ID</th>
+                                    <th width="15%">Barcode</th>
+                                    <th width="15%">Code</th>
+                                    <th width="20%">Name</th>
+                                    <th width="10%">Current stock</th>
                                     <th width="10%">Total stocks to be added</th>
                                     <th width="10%">(₱) Market Original Price / Item</th>
                                     <th width="20%">(₱) Total Cost</th>
@@ -79,12 +80,13 @@ if(!isset($_GET['item_id'])){
                                 <tbody>
                                 <tr>
                                     <td><input type="text" name="item_id" class="form-control" value="<?php echo $newItems['id']; ?>" required readonly></td>
-                                    <td><?php echo $newItems['item_code']; ?></td>
+                                    <td><input type="text" name="barcode" class="form-control" value="<?php echo $newItems['barcode']; ?>" required></td>
+                                    <td><input type="text" name="item_code" class="form-control" value="<?php echo $newItems['item_code']; ?>" required></td>
                                     <td><input type="text" name="item_name" class="form-control" value="<?php echo $newItems['item_name']; ?>" required></td>
                                     <td><input type="number" class="form-control" name="old_stock" placeholder="0" value="<?php echo $newItems['qty']; ?>" readonly></td>
-                                    <td><input type="number" class="form-control" name="new_stock" placeholder="0" required></td>
-                                    <td><input type="number" class="form-control" step="0.01" name="market_price" placeholder="0" required></td>
-                                    <td><input type="number" class="form-control" name="cost" placeholder="0" required></td>
+                                    <td><input type="number" class="form-control" name="new_stock" placeholder="0" value="0" required></td>
+                                    <td><input type="number" class="form-control" step="0.01" name="market_price" placeholder="0" value="<?php echo $newItems['market_original_price']; ?>" required></td>
+                                    <td><input type="number" class="form-control" name="cost" placeholder="0" value='0' required></td>
                                 </tr>
                                 </tbody>
                             </table>
