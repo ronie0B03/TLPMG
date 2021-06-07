@@ -8,7 +8,7 @@ $getURI = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 $_SESSION['getURI'] = $getURI.'?';
 
 $getLastTransaction = mysqli_query($mysqli, "SELECT * FROM transaction");
-$getTransaction = mysqli_query($mysqli, "SELECT * FROM transaction");
+$getTransaction = mysqli_query($mysqli, "SELECT * FROM transaction ORDER BY transaction_date DESC LIMIT 10");
 
 $lastTransactionID = 0;
 while ($newLastTransaction = mysqli_fetch_array($getLastTransaction)) {
