@@ -178,6 +178,10 @@ else{
                                 <span class="float-right"><b>TOTAL: ₱ <span id="total_amount">0.00</span></b></span>
                                 <br>
                                 <br>
+                                <hr>
+                                <div class="text-right font-weight-bold">
+                                    GRAND TOTAL :  ₱ <span id="grand_total">0.00</span>
+                                </div>
                                 <br>
                                 <br>
                                 <table class="table" width="100%" cellspacing="0">
