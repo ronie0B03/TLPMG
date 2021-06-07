@@ -48,6 +48,8 @@ $(document).ready(() =>
             );
 
             $('#total_amount_barcode').html(totalAmount);
+
+            calculateGrandTotal();
         }
     );
 
@@ -61,6 +63,8 @@ $(document).ready(() =>
 
             console.table(subtotal);
             $('#total_amount_barcode').html(amount);
+
+            calculateGrandTotal();
         }
     );
 
@@ -166,6 +170,8 @@ $(document).ready(() =>
             );
 
             $('#total_amount').html(totalAmount);
+
+            calculateGrandTotal();
         }
     );
 
@@ -178,6 +184,8 @@ $(document).ready(() =>
             $(this).parent().parent().parent().remove();
 
             $('#total_amount').html(amount);
+
+            calculateGrandTotal();
         }
     );
 
@@ -238,4 +246,13 @@ $(document).ready(() =>
             }
         }
     );
+
+    function calculateGrandTotal()
+    {
+        const totalBarcode    = $('#total_amount_barcode').html();
+        const totalItem       = $('#total_amount').html();
+        const totalGrand      = (+totalBarcode + +totalItem);  
+
+        $('#grand_total').html(totalGrand); 
+    }
 });
