@@ -16,7 +16,7 @@ while ($newLastItem = mysqli_fetch_array($getLastItem)) {
 $getItems = mysqli_query($mysqli, "SELECT * FROM inventory");
 
 ?>
-<title>Inventory - Celine & Peter Store</title>
+<title>Inventory - Toda La'el Pagibig Mini Grocery</title>
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 

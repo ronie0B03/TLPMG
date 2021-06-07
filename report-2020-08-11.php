@@ -17,7 +17,7 @@ if(isset($_GET['from_date'])){
 $getTransactions = mysqli_query($mysqli, "SELECT * FROM transaction WHERE transaction_date BETWEEN '$from_date' AND '$to_date' ");
 
 ?>
-<title>Dashboard - Celine & Peter Store</title>
+<title>Dashboard - Toda La'el Pagibig Mini Grocery</title>
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 

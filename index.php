@@ -29,7 +29,7 @@ $newTotalEarnings = $getTotalEarnings->fetch_array();
 $grandTotal = $newTotalEarnings['grand_total'] - $newTotalEarnings['total_earnings'];
 
 ?>
-<title>Dashboard - Celine & Peter Store</title>
+<title>Dashboard - Toda La'el Pagibig Mini Grocery</title>
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 

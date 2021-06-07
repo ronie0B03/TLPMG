@@ -25,7 +25,7 @@ if(!isset($_GET['item_id'])){
         $newItems = $getItems->fetch_assoc();
     }
 ?>
-<title>Add Stock - Celine & Peter Store</title>
+<title>Add Stock - Toda La'el Pagibig Mini Grocery</title>
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 

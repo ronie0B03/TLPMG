@@ -32,7 +32,7 @@ else{
 }
 
 ?>
-<title>Transactions - Celine & Peter Store</title>
+<title>Transactions - Toda La'el Pagibig Mini Grocery</title>
 
 <link href="css/bootstrap.min.css" rel="stylesheet" />
 <link href="css/bootstrap-select.min.css" rel="stylesheet" />
