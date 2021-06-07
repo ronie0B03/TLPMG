@@ -18,12 +18,12 @@ $balance = $newTransaction['amount_paid'] - $newTransaction['total_amount'];
 
 $getTransactionLists = mysqli_query($mysqli, "SELECT * FROM transaction_lists WHERE transaction_id = '$id' ");
 ?>
-<title>Print Transaction - Celine & Peter Store <?php echo $newTransaction['transaction_date'].'-'.$newTransaction['full_name']; ?></title>
+<title>Toda La'el Pagibig Mini Grocery</title>
 <!-- Content Wrapper -->
 <div id="content-wrapper" class="d-flex flex-column">
 
     <!-- Main Content -->
-    <div id="content">
+    <div id="content" style="background: white !important;">
         <?php
         include('topbar.php');
         ?>
@@ -31,37 +31,21 @@ $getTransactionLists = mysqli_query($mysqli, "SELECT * FROM transaction_lists WH
         <div class="container-fluid">
             <br>
             <br>
-            <!-- Page Heading -->
-            <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <h1 class="h3 mb-0 text-gray-800">Transaction</h1>
-            </div>
-
-            <!-- Alert here -->
-            <?php if (isset($_SESSION['message'])) { ?>
-                <div class="alert alert-<?= $_SESSION['msg_type'] ?> alert-dismissible">
-                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                    <?php
-                    echo $_SESSION['message'];
-                    unset($_SESSION['message']);
-                    ?>
-                </div>
-            <?php } ?>
-            <!-- End Alert here -->
 
             <!-- View Individual Transactions -->
-            <div class="card shadow mb-4">
+            <div class="card mb-4" style="background: white !important;">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">View Transaction</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Official Receipt</h6>
                 </div>
                 <div class="card-body">
                     <span class="float-right">Control ID: <b><?php echo $id;?></b></span>
-                    Customer Name: <b><?php echo $newTransaction['full_name']; ?></b>
+                    <!-- Customer Name: <b><?php //echo $newTransaction['full_name']; ?></b>
                     <br>
-                    Address: <b><?php echo $newTransaction['address']; ?></b>
+                    Address: <b><?php //echo $newTransaction['address']; ?></b>
                     <br>
-                    Phone Number: <b><?php echo $newTransaction['phone_num']; ?></b>
+                    Phone Number: <b><?php //echo $newTransaction['phone_num']; ?></b>
                     <br>
-                    <br>
+                    <br> -->
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
@@ -105,7 +89,7 @@ $getTransactionLists = mysqli_query($mysqli, "SELECT * FROM transaction_lists WH
                         <span class="float-right"><h6><b style="display: none; color: <?php if($balance<0){ echo 'red';}else{echo 'green';} ?>">Balance: <?php echo $balance; ?></b></h6></span>
                         <br>
                         <br>
-                        <div style="">
+                        <!-- <div style="">
                             <span class="float-right">Customer Signature: __________________________</span>
                             <br>
                             <br>
@@ -113,7 +97,7 @@ $getTransactionLists = mysqli_query($mysqli, "SELECT * FROM transaction_lists WH
                             <br>
                             <br>
                             <br>
-                        </div>
+                        </div> -->
 
                         <?php if($balance<0){ ?>
                             <form method="post" action="process_transaction.php">
@@ -136,9 +120,10 @@ $getTransactionLists = mysqli_query($mysqli, "SELECT * FROM transaction_lists WH
                                 <button type="submit" name="update_payment" class="btn btn-sm btn-success float-right"><i class="far fa-save" ></i> Update</button>
                             </form>
                         <?php }  ?>
-                        <center>
-                            <a href="view_transaction.php?id=<?php echo $id; ?>" class="text-white btn btn-sm btn-info"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
-                        </center>
+                        <center>Copyright &copy; Toda La'el Pagibig Mini Grocery <?php echo date("Y"); ?></center>
+                        <!-- <center>
+                            <a href="view_transaction.php?id=<?php //echo $id; ?>" class="text-white btn btn-sm btn-info"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
+                        </center> -->
 
                     </div>
                 </div>

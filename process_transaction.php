@@ -139,15 +139,16 @@ if(isset($_POST['save'])){
     
         $_SESSION['message']    = "Transaction has been saved!";
         $_SESSION['msg_type']   = "success";
+        header('location: print_transaction.php?id='.$transactionID);
     }
     else 
     {
         $_SESSION['message']    = "No Items present for Transaction!";
         $_SESSION['msg_type']   = "danger";
+        header('location: transactions.php'); 
     }
 
-   header('location: transactions.php'); 
-    
+
   /*   $itemCtrl = $_POST['itemCtrl'];
     $itemController = 1;
     $transactionID = $_POST['transactionID'];
